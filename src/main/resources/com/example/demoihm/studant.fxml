@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoihm.Student">
+<content>
+    <AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1200.0" styleClass="mainFxmlClass">
+
+        <children>
+            <Accordion layoutX="54.0" layoutY="38.0" />
+            <Separator layoutX="54.0" layoutY="52.0" prefHeight="0.0" prefWidth="918.0" />
+
+            <TextField layoutX="75.0" layoutY="90.0" prefHeight="40.0" prefWidth="403.0" promptText="Search book" style="-fx-background-color: transparent;" />
+
+            <VBox fx:id="bookPaneContainerAdmin" layoutX="161.0" layoutY="178.0" prefHeight="508.0" prefWidth="766.0" spacing="10.0" />
+
+            <Text fill="#dd5100" layoutX="75.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Books library ">
+                <font>
+                    <Font name="Cambria" size="28.0" />
+                </font>
+            </Text>
+            <Button layoutX="772.0" layoutY="7.0" mnemonicParsing="false"  prefHeight="32.0" prefWidth="216.0" style="-fx-background-color: #460b0b;" text="My books" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Button>
+            <Button layoutX="544.0" layoutY="7.0" mnemonicParsing="false" onAction="#logOut" prefHeight="32.0" prefWidth="216.0" style="-fx-background-color: #f52a2a;" text="Logout" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+        </children>
+    </AnchorPane>
+</content>
+</ScrollPane>

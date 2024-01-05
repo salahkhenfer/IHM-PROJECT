@@ -1,0 +1,55 @@
+{
+  "loans" : [ {
+    "loanNumber" : 1,
+    "available" : true,
+    "duration" : 10,
+    "student" : {
+      "studentNumber" : 101,
+      "lastName" : "YourLastName",
+      "firstName" : "YourFirstName"
+    },
+    "book" : {
+      "serialNumber" : 0,
+      "title" : "tgr"
+    }
+  }, {
+    "loanNumber" : 2,
+    "available" : true,
+    "duration" : 10,
+    "student" : {
+      "studentNumber" : 101,
+      "lastName" : "YourLastName",
+      "firstName" : "YourFirstName"
+    },
+    "book" : {
+      "serialNumber" : 0,
+      "title" : "tgr"
+    }
+  }, {
+    "loanNumber" : 3,
+    "available" : true,
+    "duration" : 10,
+    "student" : {
+      "studentNumber" : 101,
+      "lastName" : "YourLastName",
+      "firstName" : "YourFirstName"
+    },
+    "book" : {
+      "serialNumber" : 0,
+      "title" : "fdsfdsfd"
+    }
+  }, {
+    "loanNumber" : 4,
+    "available" : true,
+    "duration" : 10,
+    "student" : {
+      "studentNumber" : 101,
+      "lastName" : "YourLastName",
+      "firstName" : "YourFirstName"
+    },
+    "book" : {
+      "serialNumber" : 0,
+      "title" : "fdsfdsfd"
+    }
+  } ]
+}
