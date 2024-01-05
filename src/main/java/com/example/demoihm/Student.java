@@ -35,13 +35,13 @@ public class Student implements Initializable {
     private final ArrayNode loansNode = rootNode.putArray("loans");
     private int loanCounter = 1; // Initialize the loan counter
 
-    public void gotoListAccept() throws IOException {
-        gotoListAcceptCheck();
+    public void MyBooks() throws IOException {
+        MyBooksaction();
     }
-
-    private void gotoListAcceptCheck() throws IOException {
+    @FXML
+    private void MyBooksaction() throws IOException {
         HelloApplication m = new HelloApplication();
-        m.changeScene("accepteBook.fxml");
+        m.changeScene("MyBook.fxml");
     }
 
     @FXML
@@ -60,6 +60,7 @@ public class Student implements Initializable {
     }
 
     @FXML
+
     private void borrowButtonClicked(ActionEvent event) {
         Button sourceButton = (Button) event.getSource();
         String bookTitle = sourceButton.getId();
@@ -68,32 +69,60 @@ public class Student implements Initializable {
         Book selectedBook = findBookByTitle(bookTitle);
 
         if (selectedBook != null && selectedBook.isAvailable()) {
-            // Create loan information
-            ObjectNode loanNode = objectMapper.createObjectNode();
-            loanNode.put("loanNumber", generateLoanNumber());
-            loanNode.put("available", true);
-            loanNode.put("duration", 10); // Get the duration from the TextField
+            // Prompt user for last name, first name, and duration using TextInputDialog
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Loan Information");
+            dialog.setHeaderText("Enter your information");
+            dialog.setContentText("Last Name:");
 
-            // Create student information
-            ObjectNode studentNode = objectMapper.createObjectNode();
-            studentNode.put("studentNumber", 101); // Replace with the actual student number
-            studentNode.put("lastName", "YourLastName"); // Replace with the actual last name
-            studentNode.put("firstName", "YourFirstName"); // Replace with the actual first name
+            // Retrieve last name from the user
+            String lastName = dialog.showAndWait().orElse("");
 
-            // Create book information
-            ObjectNode bookNode = objectMapper.createObjectNode();
-            bookNode.put("serialNumber", generateSerialNumber());
-            bookNode.put("title", selectedBook.getTitle());
+            // Prompt for first name
+            dialog.setHeaderText("Enter your information");
+            dialog.setContentText("First Name:");
+            String firstName = dialog.showAndWait().orElse("");
 
-            // Add student and book information to the loan node
-            loanNode.set("student", studentNode);
-            loanNode.set("book", bookNode);
+            // Prompt for duration
+            dialog.setHeaderText("Enter loan duration");
+            dialog.setContentText("Duration (in days):");
+            String durationStr = dialog.showAndWait().orElse("0");
 
-            // Add the loan node to the loans array
-            loansNode.add(loanNode);
+            try {
+                int duration = Integer.parseInt(durationStr);
 
-            // Update the JSON file
-            saveToJsonFile(rootNode, "src/data.json");
+                // Create loan information
+                ObjectNode loanNode = objectMapper.createObjectNode();
+                loanNode.put("loanNumber", generateLoanNumber());
+                loanNode.put("avilable", true);
+                loanNode.put("duration", duration);
+
+                // Create student information
+                ObjectNode studentNode = objectMapper.createObjectNode();
+                studentNode.put("studentNumber", 101); // Replace with the actual student number
+                studentNode.put("lastName", lastName);
+                studentNode.put("firstName", firstName);
+
+                // Create book information
+                ObjectNode bookNode = objectMapper.createObjectNode();
+                bookNode.put("serialNumber", generateSerialNumber());
+                bookNode.put("title", selectedBook.getTitle());
+
+                // Add student and book information to the loan node
+                loanNode.set("student", studentNode);
+                loanNode.set("book", bookNode);
+
+                // Add the loan node to the loans array
+                loansNode.add(loanNode);
+
+                // Update the JSON file
+                saveToJsonFile(rootNode, "src/data.json");
+
+            } catch (NumberFormatException e) {
+                // Handle invalid duration input
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid duration input. Please enter a valid number.", ButtonType.OK);
+                alert.showAndWait();
+            }
         }
     }
 
@@ -108,11 +137,29 @@ public class Student implements Initializable {
 
     private void saveToJsonFile(ObjectNode rootNode, String filePath) {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), rootNode);
+            // Read the existing JSON file
+            JsonNode existingRoot = objectMapper.readTree(new File(filePath));
+
+            // Get the existing "loans" array, or create a new one if it doesn't exist
+            ArrayNode existingLoans = existingRoot.has("loans") ? (ArrayNode) existingRoot.get("loans") : objectMapper.createArrayNode();
+
+            // Create a new ArrayNode for the new loans and add them
+            ArrayNode newLoans = objectMapper.createArrayNode();
+            newLoans.addAll(loansNode);
+
+            // Add the new loans to the existing "loans" array
+            existingLoans.addAll(newLoans);
+
+            // Update the root node with the modified "loans" array
+            ((ObjectNode) existingRoot).set("loans", existingLoans);
+
+            // Write the updated JSON to the file
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), existingRoot);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private Pane createBookPane(String bookName, String author, int numberOfCopies) {
         VBox pane = new VBox();  // Use VBox for vertical layout
@@ -130,12 +177,9 @@ public class Student implements Initializable {
         copiesLabel.setFont(Font.font("Arial", 14));
 
         // Create input for duration
-        TextField durationInput = new TextField();
-        durationInput.setPromptText("Enter Duration");
-        durationInput.setMaxWidth(120);
+
 
         // Apply some styling to the TextField
-        durationInput.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 5px; -fx-padding: 5px;");
 
         // Create buttons with a modern, rounded style
         HBox buttonBox = new HBox(10);  // Group buttons together
@@ -149,7 +193,7 @@ public class Student implements Initializable {
         buttonBox.getChildren().addAll(borrowButton);
 
         // Arrange elements vertically
-        pane.getChildren().addAll(bookLabel, authorLabel, copiesLabel, durationInput, buttonBox);
+        pane.getChildren().addAll(bookLabel, authorLabel, copiesLabel, buttonBox);
 
         return pane;
     }
